@@ -12,6 +12,6 @@ const router = express.Router();
 router.post("/cotizacionreglas", addCotizacion_reglas);
 router.get("/cotizacionreglas", getAllCotizacion_reglas);
 router.get("/cotizacionregla/:id", getCotizacion_regla);
-router.put("/cotizacionregla/:id", updateCotizacion_regla);
+router.put("/cotizacionreglas", updateCotizacion_regla);
 router.delete("/cotizacionregla/:id", deleteCotizacion_regla)
 export default router;

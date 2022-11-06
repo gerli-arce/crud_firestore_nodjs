@@ -84,31 +84,39 @@ export const getCotizacion_regla = async (req, res, next) => {
 
 export const updateCotizacion_regla = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    // const id = req.params.id;
+    console.log(":::: INICIANDO ACTUALIZACION :::::")
     const data = req.body;
+    console.log("Request: "+JSON.stringify(data))
     if (
-      id == undefined ||
+      data.id == undefined ||
       data.campo == undefined ||
       data.nuevo_registro == undefined ||
       data.nuevo_num_cot == undefined ||
+      data.auditoria == undefined ||
       data.estado == undefined
     ) {
       throw new Error("datos incompletos");
     }
-    const cotizacionValidation = await firestore.collection("Cotizacion_reglas").doc(id);
+    const cotizacionValidation = await firestore.collection("Cotizacion_reglas").doc(data.id);
     const datavalidation = await cotizacionValidation.get();
     if (!datavalidation.exists) {
       throw new Error("El reguistro no existe");
     }else{
-        const cotizacion = await firestore.collection("Cotizacion_reglas").doc(id);
+      console.log('Data validacion:'+JSON.stringify(datavalidation.data()))
+        const cotizacion = await firestore.collection("Cotizacion_reglas").doc(data.id);
+        data.auditoria.usuario_creacion = data.auditoria.usuario_creacion == undefined ? datavalidation.data().auditoria.usuario_creacion :  data.auditoria.usuario_creacion
+        data.auditoria.fecha_creacion = data.auditoria.fecha_creacion == undefined ? datavalidation.data().auditoria.fecha_creacion : data.auditoria.fecha_creacion
         await cotizacion.update(data);
         res.status(200).json({
           message: "Operacion Correcta",
           data: data,
         });
+        console.log("Operacion Correcta")
     }
 
   } catch (error) {
+    console.log("Response: "+error)
     res.status(400).json({
       message: error.message,
     });
